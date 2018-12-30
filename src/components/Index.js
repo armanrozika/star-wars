@@ -3,7 +3,9 @@ import {Link} from 'react-router-dom'
 
 class Index extends Component{
 	 state = {
-    characters: []
+    fetchrespon: '',
+    characters: [],
+    show: 'hide'
   }
 
   componentDidMount(){
@@ -11,23 +13,58 @@ class Index extends Component{
       const respon = await fetch('https://swapi.co/api/people?format=json')
       const data = await respon.json();
       this.setState({
+        fetchrespon: data,
         characters : data.results
       })
       
     }
     fetchData();
+
+    let scrfunc = ()=>{
+      if ((window.innerHeight + window.pageYOffset) === document.body.offsetHeight+20) {
+        let fetchNext = async ()=>{
+          this.setState({
+            show: 'loader'
+          })
+          const nextres = await fetch(this.state.fetchrespon.next)
+          const nextdata = await nextres.json()
+
+          let characters = [...this.state.characters]
+          let newchar = characters.concat([...nextdata.results])
+          console.log(newchar)
+          this.setState({
+            fetchrespon: nextdata,
+            characters: newchar,
+            show: 'hide'
+          });
+
+          if(newchar.length >= this.state.fetchrespon.count){
+           window.removeEventListener('scroll', scrfunc)
+          }
+        }
+        
+        fetchNext()
+        console.log("you're at the bottom of the page");
+      }
+    }
+
+    window.addEventListener('scroll', scrfunc)
     
   }
 
+
   render() {
-    //console.log(this.state.character);
+    // console.log(this.state.fetchrespon);
+    // console.log(this.state.characters);
     let id = 0;
     let people = this.state.characters.length ? (
       this.state.characters.map(person => {
         id++;
         return (
-        	<Link key={id} to={'/character/' + id}>
-          <p>{person.name}</p>
+        	<Link className="index__link" key={id} to={'/character/' + id}>
+            <div className="index__content">
+              <p>{person.name}</p>
+            </div>
          </Link>
         )
       })
@@ -38,7 +75,10 @@ class Index extends Component{
 
     return (
       <div className="index">
-        {people}
+        <div className="index__wraper">
+           {people}
+        </div>
+        <img src="https://loading.io/spinners/coolors/lg.palette-rotating-ring-loader.gif" className={this.state.show}/>
       </div>
     );
   }

@@ -18,39 +18,70 @@ class Films extends Component {
 			});
 			let name = []
 			for(let i=0; i<this.state.charactersurl.length; i++){
-				fetch(this.state.charactersurl[i]+ '?format=json')
-					.then(res =>{
-						return res.json()
-					}).then(output => {
-						name.push(output.name)
-						this.setState({
-							characterlist: name
-						})
-					})	
+				let char = await fetch(this.state.charactersurl[i]+ '?format=json');
+				let back = await char.json();
+
+				name.push(back.name);
+				this.setState({
+					characterlist: name
+				})
 			}
+			//this.state.characterlist.push(9)
 			
-			console.log(this.state.characterlist)
+			//console.log(this.state.characterlist)
 		}
 
 		filmLength()
 	}
 
+	componentDidUpdate(prev){
+		if (this.props.location !== prev.location) {
+      	
+      let id = this.props.match.params.id
+		let filmLength = async () => {
+			const respon = await fetch ('https://swapi.co/api/films/' + id + '/?format=json'  );
+			const data = await respon.json();
+			
+			this.setState({
+				charactersurl : data.characters,
+			});
+			//let name = []
+			// for(let i=0; i<this.state.charactersurl.length; i++){
+			// 	let char = await fetch(this.state.charactersurl[i]+ '?format=json');
+			// 	let back = await char.json();
+
+			// 	name.push(back.name);
+			// 	this.setState({
+			// 		characterlist: name
+			// 	})
+			// }
+		}
+
+		filmLength()
+		
+    	}
+	}
+
 	render(){
-		let id=0;
-		let characters = this.state.characterlist.length ? (
-			this.state.characterlist.map(person =>{
-				id++;
+		//console.log(this.state.characterlist)
+		let id= 0;
+		let charId = 0;
+		let characters = this.state.charactersurl.length ? (
+			this.state.charactersurl.map(person =>{
+				id = person.slice(28);
+				charId++
 				return(
 					<Link key={id} to={'/character/' + id}>
-		          <p>{person}</p>
+						<p>char id : {id}, name: {this.state.characterlist[charId-1]}</p>
 		         </Link>
 				)
+				
 			})
 		) : (
 			<div>Loading...</div>
 		)
 		return(
-			<div>
+			<div key={this.props.match.params.id}>
 				{characters}
 			</div>
 		)

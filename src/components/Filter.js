@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {NavLink} from 'react-router-dom';
-
+import {withRouter} from 'react-router-dom'
 
 
 class Filter extends Component {
@@ -17,6 +16,11 @@ class Filter extends Component {
 			})
 		}
 		fetchData()
+		//console.log(this.props)
+	}
+
+	onChange = (e)=>{
+		this.props.history.push(e.target.value)
 	}
 
 	render(){
@@ -25,22 +29,25 @@ class Filter extends Component {
 			this.state.films.map(film => {
 				id++;
 				return(
-					<NavLink key={id} to={'/films/' + id}>
-						<p>{film.title}</p>
-					</NavLink>
+					<option key={id} value={'/films/' + id}>
+						{film.title}
+					</option>
 				)
 			})
 		) : (
-			<p>loading...</p>
+			<option></option>
 		)
 
 		return(
-			<div>
-				{filmList}
+			<div className="filter">
+				<p>Filter By Films</p>
+				<select onClick={this.onChange}>
+					{filmList}
+				</select>
 			</div>
 		)
 
 	}
 }
 
-export default Filter;
+export default withRouter(Filter);
