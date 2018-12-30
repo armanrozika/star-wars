@@ -45,16 +45,16 @@ class Films extends Component {
 			this.setState({
 				charactersurl : data.characters,
 			});
-			//let name = []
-			// for(let i=0; i<this.state.charactersurl.length; i++){
-			// 	let char = await fetch(this.state.charactersurl[i]+ '?format=json');
-			// 	let back = await char.json();
+			let name = []
+			for(let i=0; i<this.state.charactersurl.length; i++){
+				let char = await fetch(this.state.charactersurl[i]+ '?format=json');
+				let back = await char.json();
 
-			// 	name.push(back.name);
-			// 	this.setState({
-			// 		characterlist: name
-			// 	})
-			// }
+				name.push(back.name);
+				this.setState({
+					characterlist: name
+				})
+			}
 		}
 
 		filmLength()
@@ -72,7 +72,10 @@ class Films extends Component {
 				charId++
 				return(
 					<Link key={id} to={'/character/' + id}>
-						<p>char id : {id}, name: {this.state.characterlist[charId-1]}</p>
+						<div className="films__content">
+							<h1>{this.state.characterlist[charId-1]}</h1>
+							<p>Click for character info</p>
+						</div>
 		         </Link>
 				)
 				
@@ -81,7 +84,7 @@ class Films extends Component {
 			<div>Loading...</div>
 		)
 		return(
-			<div key={this.props.match.params.id}>
+			<div className="films">
 				{characters}
 			</div>
 		)

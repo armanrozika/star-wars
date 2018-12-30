@@ -22,13 +22,26 @@ class Character extends Component {
 
 	render(){
 		let person = this.state.character ? (
-			<p>{this.state.character.name}</p>
+			<div className="character__content">
+				<p>Name: {this.state.character.name}</p>
+				<p>Gender: {this.state.character.gender}</p>
+				<p>Height: {this.state.character.height}</p>
+				<p>Mass: {this.state.character.mass}</p>
+				<p>Hair Color: {this.state.character.hair_color}</p>
+				<p>Skin Color: {this.state.character.skin_color}</p>
+				<p>Eye Color: {this.state.character.eye_color}</p>
+				<p>Birth Year: {this.state.character.birth_year}</p>
+			</div>
+			
 		) : (
 			<p>loading...</p>
 		)
 		return(
 		 <div className="character">
-		 	{person}
+		 	
+		 		{person}
+		 
+		 	
 		 </div>
 		)
 	}

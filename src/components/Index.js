@@ -8,20 +8,12 @@ class Index extends Component{
     show: 'hide'
   }
 
-  componentDidMount(){
-    let fetchData = async () =>{
-      const respon = await fetch('https://swapi.co/api/people?format=json')
-      const data = await respon.json();
-      this.setState({
-        fetchrespon: data,
-        characters : data.results
-      })
-      
-    }
-    fetchData();
+  componentWillUnmount(){
+    window.removeEventListener('scroll', this.scrfunc)
+  }
 
-    let scrfunc = ()=>{
-      if ((window.innerHeight + window.pageYOffset) === document.body.offsetHeight+20) {
+  scrfunc = ()=>{
+    if ((window.innerHeight + window.pageYOffset) === document.body.offsetHeight+20) {
         let fetchNext = async ()=>{
           this.setState({
             show: 'loader'
@@ -39,16 +31,32 @@ class Index extends Component{
           });
 
           if(newchar.length >= this.state.fetchrespon.count){
-           window.removeEventListener('scroll', scrfunc)
+           window.removeEventListener('scroll', this.scrfunc)
           }
         }
         
         fetchNext()
         console.log("you're at the bottom of the page");
       }
+  }
+
+  componentDidMount(){
+    let fetchData = async () =>{
+      const respon = await fetch('https://swapi.co/api/people?format=json')
+      const data = await respon.json();
+      this.setState({
+        fetchrespon: data,
+        characters : data.results
+      })
+      
+    }
+    fetchData();
+
+    let scrfunc = ()=>{
+      
     }
 
-    window.addEventListener('scroll', scrfunc)
+    window.addEventListener('scroll', this.scrfunc)
     
   }
 
@@ -63,7 +71,8 @@ class Index extends Component{
         return (
         	<Link className="index__link" key={id} to={'/character/' + id}>
             <div className="index__content">
-              <p>{person.name}</p>
+              <h1>{person.name}</h1>
+              <p>click for character info</p>
             </div>
          </Link>
         )
