@@ -41,7 +41,7 @@ class Filter extends Component {
 		return(
 			<div className="filter">
 				<p>Filter By Films</p>
-				<select onClick={this.onChange}>
+				<select onChange={this.onChange}>
 					{filmList}
 				</select>
 			</div>
